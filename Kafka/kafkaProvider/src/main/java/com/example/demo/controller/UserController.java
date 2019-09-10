@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.bean.User;
-import com.example.demo.resultHandler.KafkaSendResultHandler;
+//import com.example.demo.resultHandler.KafkaSendResultHandler;
 import com.example.demo.service.UserService;
 import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class UserController {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    @Autowired
-    private KafkaSendResultHandler producerListener;
+   /* @Autowired
+    private KafkaSendResultHandler producerListener;*/
 
 
     @Autowired
@@ -40,7 +40,7 @@ public class UserController {
 
     @RequestMapping(value = "send")
     public int send(String key, String data) throws Exception{
-        kafkaTemplate.setProducerListener(producerListener);
+//        kafkaTemplate.setProducerListener(producerListener);
 
         kafkaTemplate.send("test", key, data);
         kafkaTemplate.send("topic.quick.demo", 0, System.currentTimeMillis(), "0", "send message with timestamp");
@@ -64,6 +64,13 @@ public class UserController {
             //return true;
         });
         return 1;
+    }
+
+    @RequestMapping(value = "sendBatch")
+    public void sendBatch() {
+        for (int i = 0; i < 12; i++) {
+            kafkaTemplate.send("batch", "test batch listener,dataNum-" + i);
+        }
     }
 
 
